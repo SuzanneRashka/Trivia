@@ -4,43 +4,46 @@ $(document).ready(function () {
   $("#start").on("click", function () {
     startGame();
     $(".wrapper").show();
-    console.log("within onclick - start");
     $(this).hide();
   });
 });
 
 var timeMax = 3;
-var timer;
-var timerOutput;
-var timerMessage;
+var intervalId; //holds setInterval under run()
+var running = false; // boolean to toggle
+var select; //placeholder for selected
+var index;
+// var timerOutput;
+// var timerMessage;
 var questionOutput;
 var optionOutput;
 var userAnswer;
 var message = "Game Over!";
+
 var trivia = [{
     question: "What is 2*5?",
     choices: [2, 5, 10, 15, 20],
-    correctAnswer: 2
+    answer: 2
   },
   {
     question: "What is 3*6?",
     choices: [3, 6, 9, 12, 18],
-    correctAnswer: 4
+    answer: 4
   },
   {
     question: "What is 8*9?",
     choices: [72, 99, 108, 134, 156],
-    correctAnswer: 0
+    answer: 0
   },
   {
     question: "What is 1*7?",
     choices: [4, 5, 6, 7, 8],
-    correctAnswer: 3
+    answer: 3
   },
   {
     question: "What is 8*8?",
     choices: [20, 30, 40, 50, 64],
-    correctAnswer: 4
+    answer: 4
   }
 ];
 
@@ -53,47 +56,50 @@ function startGame() {
   // start button invokes...
   // nextQuestion()
 }
-// initiates countdown
+// timer start
 function run() {
-  timer = setInterval(countdown, 1000);
+  if (!running) {
+    intervalId = setInterval(countdown, 1000);
+    running = true;
+  }
 }
-// countdown timer for each question
+// timer stop
+function stop() {
+
+  clearInterval(intervalId);
+  running = false;
+}
+
+// countdown timer
 function countdown() {
-  $("#start").hide();
   run();
   //catch end of count
   if (timeMax <= 0) {
-    clearTimeout();
-    timerMessage = setTimeout(function () {
-      $("#timer").html("<h1>Time's Up</h1>");
-    }, 1000);
+    clearInterval(intervalId);
+    running = false;
+    $("#timer").html("<h1>Time's Up</h1>");
+    // $("#answer").html("<p>Time is up! The correct answer is: " + trivia.choices[trivia.answer] + "</p>");
+
   } else {
-    timerOutput = $("#timer").html(
-      "<h1>" + timeMax + " seconds remaining</h1>"
-    );
+    $("#timer").html("<h1>" + timeMax + " seconds remaining</h1>");
     timeMax--;
     console.log(timeMax);
   }
 }
 
-function display(data) {
-  var questionData = "<form id='qOne'>" + data.question + "<br>";
-  var choices = data.choices;
-
-  for (var i = 0; i < choices.length; i++) {
-    var choice = choices[i];
-    questionData += '<input type="radio" ' + choice;
+function display() {
+  for (var i = 0; i < trivia.length; i++) {
+    $("#question").html('<h1>Question: ' + trivia[i].question + '</h1>');
+    $("<div>").addClass("answer-choice");
+    $("<div>").html(select.trivia[i]); /// ********* needs to be a hide, then show
+    $("<div>").attr("data-guessvalue", i);
+    $("#answer").append$("<div>");
+    console.log(trivia[i].question);
   }
-  return questionData + "</form>";
 }
-window.display = display;
+display();
 
 function nextQuestion() {
-  var questionHTML = "";
-  for (var i = 0; i < trivia.question.length; i++) {
-    questionHTML += display(trivia.question[i]);
-  }
-  $("#questions-container").append(questionHTML);
   // starts timer
   // countdown();
   // display question
@@ -102,7 +108,6 @@ function nextQuestion() {
 }
 
 function answerChecker() {
-  console.log("answerChecker invoked");
   // countdown() to check time remaining
   // invoke right or wrong()
   // displays message/pop-up depending
@@ -127,3 +132,8 @@ function results() {
 // Questions...
 // Async extending time of displayed questions??
 // lost full second on countdown()
+
+// ******** working for loop *********
+// for (var i = 0; i < trivia.length; i++) {
+//   console.log(trivia[i].question);
+// }
