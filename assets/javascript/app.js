@@ -46,7 +46,7 @@ $(document).ready(function () {
       question: "What Great Lake state has more shoreline than the entire U.S. Atlantic seaboard?",
       options: ["Michigan", "Wisconsin", "New York", "Ohio"],
       correct: "0",
-      image: "assets/images/mountain.jpg"
+      image: "assets/images/coastline.jpg"
     }
   ];
   // ******** working for loop *********
@@ -85,15 +85,15 @@ $(document).ready(function () {
       if (id === correct) {
         answered = true; // stops the timer
         $(".question").text(
-          "THE ANSWER IS: " + trivia[indexQandA].options[correct]
+          "The answer is: " + trivia[indexQandA].options[correct]
         );
         correctAnswer();
       } else {
         answered = true; //stops the timer
         $(".question").text(
-          "YOU CHOSE: " +
+          "You selected: " +
           trivia[indexQandA].options[id] +
-          ".....HOWEVER THE ANSWER IS: " +
+          "..... however, the answer is: " +
           trivia[indexQandA].options[correct]
         );
         incorrectAnswer();
@@ -106,7 +106,7 @@ $(document).ready(function () {
       answered = true;
       clearInterval(intervalId);
       $(".question").text(
-        "THE CORRECT ANSWER IS: " + trivia[indexQandA].options[correct]
+        "The Correct answer is: " + trivia[indexQandA].options[correct]
       );
       unAnswered();
     } else if (answered === true) {
@@ -114,7 +114,7 @@ $(document).ready(function () {
     } else {
       timeRemaining--;
       $(".timeRemaining").text(
-        "YOU HAVE " + timeRemaining + " SECONDS TO CHOOSE"
+        "You have " + timeRemaining + " seconds left"
       );
     }
   }
@@ -122,21 +122,21 @@ $(document).ready(function () {
   function correctAnswer() {
     correctAnswers++;
     $(".timeRemaining")
-      .text("YOU HAVE ANSWERED CORRECTLY!");
+      .text("Good Job! That's right!");
     resetRound();
   }
 
   function incorrectAnswer() {
     incorrectAnswers++;
     $(".timeRemaining")
-      .text("YOU HAVE ANSWERED INCORRECTLY!");
+      .text("Boo. That's not right!");
     resetRound();
   }
 
   function unAnswered() {
     unansweredQuestions++;
     $(".timeRemaining")
-      .text("YOU FAILED TO CHOOSE AN ANSWER");
+      .text("You didn't make a choice.");
     resetRound();
   }
 
@@ -158,9 +158,9 @@ $(document).ready(function () {
         $(".question").remove();
         $(".timeRemaining").remove();
         $(".answerImage").remove();
-        $(".answers").append("<h4 class= answersAll end>CORRECT ANSWERS: " + correctAnswers + "</h4>");
-        $(".answers").append("<h4 class= answersAll end>INCORRECT ANSWERS: " + incorrectAnswers + "</h4>");
-        $(".answers").append("<h4 class= answersAll end>UNANSWERED QUESTIONS: " + unansweredQuestions + "</h4>");
+        $(".answers").append("<h4 class= answersAll end>Correct Answers: " + correctAnswers + "</h4>");
+        $(".answers").append("<h4 class= answersAll end>Incorrect Answers: " + incorrectAnswers + "</h4>");
+        $(".answers").append("<h4 class= answersAll end>Unanswered Questions: " + unansweredQuestions + "</h4>");
         setTimeout(function () {
           location.reload(); // page reload to go back to start. 
         }, 7000);
@@ -174,7 +174,12 @@ $(document).ready(function () {
   });
 }); // end of document ready
 
-/// 99 problems and broken code is all of them
-
-// radio buttons not displaying
+// Problems...
+// Async extending time of displayed questions?? fixed
+// lost full second on countdown() fixed
+// nothing works except the timer?? works now?!?
+// printing questions at end of timer... not anymore! 
+// Start button needs text
+// add radio buttons for options
+// radio buttons not displaying ... make button-looking backgrounds. 
 // curser is in input field??
