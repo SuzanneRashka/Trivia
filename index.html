@@ -13,16 +13,27 @@
 </head>
 
 <body>
-    <div id="start">
-        <button>Start</button>
-    </div>
-    <div class='wrapper'>
-        <div id="timer"></div>
-        <h1 id="question"></h1>
-        <h2 id="options"></h2>
-        <h2 id="answer"></h2>
-        <br>
-        <button id="reset">Play Again?</button>
+    <div id="wrapper">
+        <div>
+            <div class="container">
+                <section class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="jumbotron">
+                            <h1>Random Trivia!</h1>
+                            <h5 class="timeRemaining"></h5>
+                            <br>
+                            <h2 class="question"></h2>
+                            <div class="answers"></div>
+                            <p class="start-button text-center">
+                                <a class="btn btn-primary btn-lg startButton" href="#" role="button">Start
+                                    <span class="glyphicon glyphicon-off"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

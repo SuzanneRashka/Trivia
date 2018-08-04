@@ -1,177 +1,180 @@
 $(document).ready(function () {
-  console.log("ready!");
-  // onclicks go here
-  $("#start").on("click", function () {
-    startGame();
-    $(".wrapper").show();
-    $(this).hide();
-  });
+  console.log("ready");
 
+  var correctAnswers = 0;
+  var incorrectAnswers = 0;
+  var unansweredQuestions = 0;
 
-  var timeMax = 3;
-  var intervalId; //holds setInterval under run()
-  var running = false; // boolean to toggle
-  var select; //placeholder for selected
-  var index; // i don't remember what this does
-  var userGuess = ""; // selected answer from radio button// Needed????
-  var correctCount = 0;
-  var wrongCount = 0;
-  var unansweredCount = 0;
-  var newArray = [];
+  var timeRemaining = 10;
 
-
-  // var message = "Game Over!";
+  var intervalId; // timeout
+  var indexQandA = 0; //index to load a different question each round without the game reset or screen refresh
+  var answered = false; //variable to stop the timer if user has clicked an answer
+  var correct;
 
   var trivia = [{
-      question: "What is 2*5?",
-      choices: [2, 5, 10, 15, 20],
-      answer: 2
+      question: "What is the diameter of Earth?",
+      options: ["5,000 miles", "7,000 miles", "8,000 miles", "9,000 miles"],
+      correct: "2",
+      image: "assets/images/earth.jpg"
     },
     {
-      question: "What is 3*6?",
-      choices: [3, 6, 9, 12, 18],
-      answer: 4
+      question: "Which chess piece can only move diagonally?",
+      options: ["Bishop", "Knight", "Rook", "King"],
+      correct: "0",
+      image: "assets/images/chess.jpg"
     },
     {
-      question: "What is 8*9?",
-      choices: [72, 99, 108, 134, 156],
-      answer: 0
+      question: "When did the Cold War end?",
+      options: ["1986", "1984", "1992", "1989"],
+      correct: "3",
+      image: "assets/images/war.jpg"
     },
     {
-      question: "What is 1*7?",
-      choices: [4, 5, 6, 7, 8],
-      answer: 3
+      question: "What flavor is Cointreau?",
+      options: ["Vanilla", "Orange", "Peach", "Grape"],
+      correct: "1",
+      image: "assets/images/orange.jpg"
     },
     {
-      question: "What is 8*8?",
-      choices: [20, 30, 40, 50, 64],
-      answer: 4
+      question: "What was the first planet to be discovered using the telescope, in 1781?",
+      options: ["Mars", "Venus", "Uranus", "Pluto"],
+      correct: "2",
+      image: "assets/images/uranus.jpg"
+    },
+    {
+      question: "What Great Lake state has more shoreline than the entire U.S. Atlantic seaboard?",
+      options: ["Michigan", "Wisconsin", "New York", "Ohio"],
+      correct: "0",
+      image: "assets/images/mountain.jpg"
     }
   ];
-
   // ******** working for loop *********
   // for (var i = 0; i < trivia.length; i++) {
   //   console.log(trivia[i].question);
   //   console.log(trivia[i].choices);
   // }
-
-
   function startGame() {
-    console.log("startGame invoked");
-    countdown();
-    clearTimeout();
-    // $("#start").append('<button>Start</button>');
-    // start button invokes...
-    // nextQuestion()
+    console.log("game has begun");
+    $(".start-button").remove();
+    // start 0 score
+    correctAnswers = 0;
+    incorrectAnswers = 0;
+    unansweredQuestions = 0;
+    loadQandA();
   }
-  // timer start
-  function run() {
-    if (!running) {
-      intervalId = setInterval(countdown, 1000);
-      running = true;
+
+  function loadQandA() {
+    answered = false; // will allow timeRemaining to be pushed back to <h5> after round reset....else statement in function timer() **forgot this before
+    timeRemaining = 10;
+    intervalId = setInterval(timer, 1000); // resets after new question
+    if (answered === false) {
+      timer();
     }
-  }
-  // timer stop
-  function stop() {
+    correct = trivia[indexQandA].correct;
+    var question = trivia[indexQandA].question;
+    $(".question").html(question); // display question
+    for (var i = 0; i < 4; i++) {
+      var answer = trivia[indexQandA].options[i];
 
-    clearInterval(intervalId);
-    running = false;
-  }
-
-  // countdown timer
-  function countdown() {
-    run();
-    //catch end of count
-    if (timeMax <= 0) {
-      clearInterval(intervalId);
-      running = false;
-      $("#timer").html("<h1>Time's Up</h1>");
-      $("#answer").html("<p>Time is up! The correct answer is: " + trivia.choices[trivia.answer] + "</p>");
-      wtf();
-      unansweredCount++;
-    } else {
-      $("#timer").html("<h1>" + timeMax + " seconds remaining</h1>");
-      timeMax--;
-      console.log(timeMax);
-    }
-  }
-
-  // running everything to html
-  function display() {
-    for (var i = 0; i < trivia.length; i++) {
-      $("#question").html('<h1>Question: ' + trivia.question + '</h1>');
-      $("<div>").addClass("answer-choice");
-      $("<div>").html(trivia.trivia[i]); /// ********* needs to be a hide, then show
-      $("#answer").append$("<div>");
-      console.log(trivia[i].question);
+      $(".answers").append('<div><label type= radio class= answersAll id=' + i + '>' + answer + '</label></div>') // display answer
     }
 
-    // validate questions
-    $(".answer-choice").on("click", function () { /// .answerchoice being made in display function
-
-      // right or wrong guess
-      for (var i = 0; i < trivia.length; i++) {
-        // stop timer, check guess, display correct, add to total
-        if (userGuess === trivia.answer) {
-          stop();
-          correctCount++;
-          wtf();
-        } else {
-          // stop timer, check guess, display wrong, add to total
-          stop();
-          wrongCount++;
-          $("#answer").html('<p>Wrong! The Correct answer is: ' + trivia.choices[trivia.answer] + '</p>');
-          wtf();
-        }
-      }
-
-    })
-  }
-
-  function wtf() {
-
-    for (var i = 0; i < trivia.length; i++) {
-      newArray.push(select);
-      options.splice(index, 1);
-    }
-
-    setTimeout(function () {
-      $("#answer").empty();
-      timeMax = 5;
-
-      if (wrongCount + correctCount + unansweredCount === options.length) {
-        $("#question").empty();
-        $("#question").html('<h3>Game Over! Here\'s how you did: </h3>');
-        $("#answer").append("<h4>Correct: " + correctCount + "</h4>");
-        $("#answer").append("<h4>Incorrect: " + wrongCount + "</h4>");
-        $("#answer").append("<h4>Unanswered: " + unansweredCount + "</h4>");
-        $("#reset").show();
-        correctCount = 0;
-        wrongCount = 0;
-        unansweredCount = 0;
-
+    $("label").click(function () {
+      var id = $(this).attr("id");
+      if (id === correct) {
+        answered = true; // stops the timer
+        $(".question").text(
+          "THE ANSWER IS: " + trivia[indexQandA].options[correct]
+        );
+        correctAnswer();
       } else {
-
-        run();
-        display();
-
+        answered = true; //stops the timer
+        $(".question").text(
+          "YOU CHOSE: " +
+          trivia[indexQandA].options[id] +
+          ".....HOWEVER THE ANSWER IS: " +
+          trivia[indexQandA].options[correct]
+        );
+        incorrectAnswer();
       }
-    }, 3000);
-  };
+    });
+  }
+  /// timer runs and 0's out or clears if answered
+  function timer() {
+    if (timeRemaining === 0) {
+      answered = true;
+      clearInterval(intervalId);
+      $(".question").text(
+        "THE CORRECT ANSWER IS: " + trivia[indexQandA].options[correct]
+      );
+      unAnswered();
+    } else if (answered === true) {
+      clearInterval(intervalId);
+    } else {
+      timeRemaining--;
+      $(".timeRemaining").text(
+        "YOU HAVE " + timeRemaining + " SECONDS TO CHOOSE"
+      );
+    }
+  }
 
-  //reset button
-  $("#reset").on("click", function () {
-    $("#reset").hide();
-    $("#answer").empty();
-    $("#question").empty();
-    run();
-    display();
-  })
+  function correctAnswer() {
+    correctAnswers++;
+    $(".timeRemaining")
+      .text("YOU HAVE ANSWERED CORRECTLY!");
+    resetRound();
+  }
 
-  // Questions...
-  // Async extending time of displayed questions?? fixed
-  // lost full second on countdown() fixed
-  // nothing works except the timer
-  // printing questions at on time... not anymore! 
+  function incorrectAnswer() {
+    incorrectAnswers++;
+    $(".timeRemaining")
+      .text("YOU HAVE ANSWERED INCORRECTLY!");
+    resetRound();
+  }
 
-}); // end document.ready
+  function unAnswered() {
+    unansweredQuestions++;
+    $(".timeRemaining")
+      .text("YOU FAILED TO CHOOSE AN ANSWER");
+    resetRound();
+  }
+
+  function resetRound() {
+    $(".answersAll").remove();
+    $(".answers").append(
+      '<img class=answerImage src="' +
+      trivia[indexQandA].image +
+      ' ">'
+    ); // adds answer image
+    indexQandA++; // increments index which will load next question when loadQandA() is called again
+    if (indexQandA < trivia.length) {
+      setTimeout(function () {
+        loadQandA();
+        $(".answerImage").remove();
+      }, 3000); // removes answer image from previous round
+    } else {
+      setTimeout(function () {
+        $(".question").remove();
+        $(".timeRemaining").remove();
+        $(".answerImage").remove();
+        $(".answers").append("<h4 class= answersAll end>CORRECT ANSWERS: " + correctAnswers + "</h4>");
+        $(".answers").append("<h4 class= answersAll end>INCORRECT ANSWERS: " + incorrectAnswers + "</h4>");
+        $(".answers").append("<h4 class= answersAll end>UNANSWERED QUESTIONS: " + unansweredQuestions + "</h4>");
+        setTimeout(function () {
+          location.reload(); // page reload to go back to start. 
+        }, 7000);
+      }, 5000);
+    }
+  }
+
+  $(".startButton").on("click", function () {
+    $(".startButton");
+    startGame();
+  });
+}); // end of document ready
+
+/// 99 problems and broken code is all of them
+
+// radio buttons not displaying
+// curser is in input field??

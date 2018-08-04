@@ -2,6 +2,19 @@ body,
 html {
     background-color: teal;
     height: 100%;
+    margin-top: 20px;
+}
+
+.answerImage {
+    width: 150;
+    height: 150;
+    curser: pointer;
+}
+
+.answersAll {
+    cursor: pointer;
+    padding: 5px;
+    background-color: #00CED1;
 }
 
 /* .bg {
